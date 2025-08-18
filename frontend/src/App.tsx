@@ -3,6 +3,7 @@ import axios from "axios";
 import './App.css'
 import {useEffect, useState} from "react";
 import type {Product} from "./Product.ts";
+import ProductTableRow from "./ProductTableRow.tsx";
 
 function App() {
 
@@ -25,11 +26,27 @@ function App() {
   return (
     <>
       <h1>Warehouse</h1>
-        {
-            products.map((p) => {
-                return(<p>{p.name}</p>)
-            })
-        }
+        <table border={1}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Location</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => {
+                return (<ProductTableRow
+                    value={product}
+                    onDetailsButtonClicked={() => { }}
+                    onDeleteButtonClicked={() => { }}
+                    onEditButtonClicked={() => { }}
+                />)
+            })}
+            </tbody>
+        </table>
     </>
   )
 }
