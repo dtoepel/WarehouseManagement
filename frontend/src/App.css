@@ -29,8 +29,22 @@ button.productButton{
   border-radius: 5px;
   padding: 0;
   border-spacing: 0;
-  margin: 2px 2px 2px 0;
+  margin: 2px 2px 2px 2px;
   text-align: center;
   color: #fff;
   background-color: #444;
+}
+
+button.miniButton{
+  font-size: 12px;
+  font-weight: bold;
+  height: 18px;
+  width: 18px;
+  border-radius: 5px;
+  padding: 0;
+  border-spacing: 0;
+  margin: 2px 2px 2px 2px;
+  text-align: center;
+  color: #444;
+  background-color: #aaa;
 }

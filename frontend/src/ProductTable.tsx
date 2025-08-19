@@ -26,12 +26,20 @@ export default function ProductTable(props:Readonly<ProductTableProps>) {
                 return(
                 <tr className={"shortProductBox"}>
                     <td className={oddEven}><span>{product.name}</span></td>
-                    <td className={oddEven}><span>{product.quantity}</span></td>
+                    <td className={oddEven}><span>{product.quantity}</span>
+                        <button className={"miniButton"}>+</button>
+                        <button className={"miniButton"}>-</button>
+                    </td>
                     <td className={oddEven}><span>{product.price}</span></td>
                     <td className={oddEven}><span>{product.location}</span></td>
-                    <td className={oddEven}><button className={"productButton"} onClick={() => props.onProductDetailsButtonClicked(product)}>Details</button>
-                        <button className={"productButton"} onClick={() => props.onProductEditButtonClicked(product)}>Edit</button>
-                        <button className={"productButton"} onClick={() => props.onProductDeleteButtonClicked(product)}>Delete</button></td>
+                    <td className={oddEven}>
+                        <button className={"productButton"}
+                                onClick={() => props.onProductDetailsButtonClicked(product)}>Details</button>
+                        <button className={"productButton"}
+                                onClick={() => props.onProductEditButtonClicked(product)}>Edit</button>
+                        <button className={"miniButton"}
+                                style={{backgroundColor:"#b00",color:"white",fontWeight:"bold"}}
+                                onClick={() => props.onProductDeleteButtonClicked(product)}>X</button></td>
                 </tr>
             )})}
             </tbody>

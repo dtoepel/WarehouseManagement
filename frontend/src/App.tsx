@@ -10,10 +10,8 @@ function App() {
     const[products,setProducts] = useState<Product[]>([])
 
     function getAllProducts() {
-        console.log("getAllProducts");
         axios.get("api/products").then(
             (response) => {
-                console.log(response.data);
                 setProducts(response.data)
             }
         )
