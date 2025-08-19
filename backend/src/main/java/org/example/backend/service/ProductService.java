@@ -1,12 +1,12 @@
 package org.example.backend.service;
 
+import org.example.backend.exceptions.ProductNotFoundException;
 import org.example.backend.model.Product;
 import org.example.backend.repository.ProductRepo;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -19,4 +19,10 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepo.findAll();
     }
+
+    public Optional<Product> getProductById(String id) {
+        return Optional.ofNullable(productRepo.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id)));
+    }
+
 }
