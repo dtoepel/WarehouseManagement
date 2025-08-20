@@ -1,7 +1,9 @@
+
 import axios from "axios";
 import './App.css'
 import {useCallback, useEffect, useState} from "react";
 import type { Product} from "./types/types.ts";
+import ProductTable from "./ProductTable.tsx";
 import AddProductPage from "./pages/AddProductPage.tsx";
 
 function App() {
@@ -20,6 +22,10 @@ function App() {
             )
         }
     }, [setProducts])
+
+    function deleteProduct(product:Product) {
+        axios.delete("/api/products/"+product.id).then(getAllProducts)
+    }
 
     useEffect(() => {
         getAllProducts()
@@ -50,6 +56,12 @@ function App() {
                     isFormActive={isFormActive}
                 />
             </div>
+            <ProductTable products={products}
+                          onProductEditButtonClicked={(product:Product) => console.log("Edit Button Clicked: " + product.name)}
+                          onProductDetailsButtonClicked={(product:Product) => console.log("Details Button Clicked: " + product.name)}
+                          onProductDeleteButtonClicked={(product:Product) =>
+                              deleteProduct(product)}
+            />
             {
                 products.map((p) => {
                     return (
