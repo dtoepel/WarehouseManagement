@@ -1,12 +1,12 @@
 package org.example.backend.controller;
 
 import org.example.backend.model.Product;
+import org.example.backend.model.ProductDto;
 import org.example.backend.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,6 +21,11 @@ public class WarehouseController {
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @PostMapping("/add")
+    public Product addProduct(@RequestBody ProductDto product) {
+        return productService.addProduct(product);
     }
 
     @DeleteMapping("{productId}")
