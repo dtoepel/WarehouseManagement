@@ -33,45 +33,6 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Test
-    void getProductById_returnsProduct_whenFound() {
-        // given
-        String id = "p1";
-        Product p = new Product(
-                id, "USB-C Cable 1m", "USB-C to USB-C, 60W",
-                "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
-                "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
-        when(productRepo.findById(id)).thenReturn(Optional.of(p));
-
-        // when
-
-        //then
-    }
-
-//    @Test
-//    void addProduct_shouldReturnProduct_whenCalled() {
-//        ProductRepo mockRepository = mock(ProductRepo.class);
-//        IdService mockIdService = mock(IdService.class);
-//        ProductService testService = new ProductService(mockRepository, mockIdService);
-//
-//        // given
-//        ProductDto newProduct = new ProductDto(
-//                 "USB-C Cable 1m", "USB-C to USB-C, 60W",
-//                "CAB-USBC-1M", 10, 6.90, "B2-R05-B04");
-//
-//        // when
-//        Product expected = new Product(
-//                "1", "USB-C Cable 1m", "USB-C to USB-C, 60W",
-//                "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
-//                "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
-//
-//        when(mockIdService.generateId()).thenReturn("1");
-//        when(mockRepository.save(newProduct)).thenReturn(expected);
-//
-//        Product actual = testService.addProduct("1",)
-//
-//    }
-
-    @Test
     void addProduct_buildsAndSavesProduct_withGeneratedId_andTimestamps() {
         // Arrange
         ProductDto dto = new ProductDto(
@@ -121,9 +82,6 @@ class ProductServiceTest {
 
     @Test
     void deleteProduct_shouldRemoveProduct_whenCalledWithValidId() {
-        // Arrange
-        String id="p1";
-
         Product existing = new Product( "p1", "USB-C Cable 1m", "USB-C to USB-C, 60W",
                 "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
                 "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
