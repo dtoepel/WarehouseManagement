@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Service
 public class ProductService {
-    String now = Instant.now().toString();
 
     private final ProductRepo productRepo;
 
@@ -25,6 +24,8 @@ public class ProductService {
     }
 
     public Product addProduct(Product newProduct) {
+//    String now = Instant.now().toString();
+
         Product product = new Product(
                 UUID.randomUUID().toString(),
                 newProduct.name(),
@@ -33,8 +34,8 @@ public class ProductService {
                 newProduct.quantity(),
                 newProduct.price(),
                 newProduct.location(),
-                now,
-                now
+                Instant.now().toString(),
+                Instant.now().toString()
         );
 
         productRepo.save(product);
