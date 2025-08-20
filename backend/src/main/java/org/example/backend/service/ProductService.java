@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -18,5 +19,14 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepo.findAll();
+    }
+
+    public boolean deleteProduct(String productId) {
+        Optional<Product> response = productRepo.findById(productId);
+        if(response.isPresent()) {
+            productRepo.deleteById(productId);
+            return true;
+        }
+        return false;
     }
 }
