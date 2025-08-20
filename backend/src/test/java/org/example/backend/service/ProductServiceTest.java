@@ -35,11 +35,6 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Test
-    void getProductById_returnsProduct_whenFound() {
-        // given
-        String id = "p1";
-        Product p = new Product(
-                id, "USB-C Cable 1m", "USB-C to USB-C, 60W",
     void addProduct_buildsAndSavesProduct_withGeneratedId_andTimestamps() {
         // Arrange
         ProductDto dto = new ProductDto(
@@ -92,25 +87,42 @@ class ProductServiceTest {
         Product existing = new Product( "p1", "USB-C Cable 1m", "USB-C to USB-C, 60W",
                 "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
                 "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
+
+        when(productRepo.findById("p1")).thenReturn(Optional.of(existing));
+
+        productService.deleteProduct("p1");
+
+        verify(productRepo,times(1)).deleteById("p1");
+
+        verifyNoMoreInteractions(productRepo);
+
+    }
+
+
+    @Test
+    void getProductById_returnsProduct_whenFound() {
+        // given
+        String id = "p1";
+        Product p = new Product(
+                id, "USB-C Kablo 1m", "USB-C to USB-C, 60W",
+                "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
+                "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
         when(productRepo.findById(id)).thenReturn(Optional.of(p));
 
         // when
         Product result = productService.getProductById(id).orElse(null);
-        when(productRepo.findById("p1")).thenReturn(Optional.of(existing));
 
         // then
         assertThat(result).isEqualTo(p);
         verify(productRepo, times(1)).findById(id);
         verifyNoMoreInteractions(productRepo);
     }
-        productService.deleteProduct("p1");
 
     @Test
     void getProductById_throwsProductNotFound_whenMissing() {
         // given
         String id = "missing";
         when(productRepo.findById(id)).thenReturn(Optional.empty());
-        verify(productRepo,times(1)).deleteById("p1");
 
         // when/then
         assertThatThrownBy(() -> productService.getProductById(id))
