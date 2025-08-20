@@ -1,10 +1,15 @@
 package org.example.backend.controller;
 
 import org.example.backend.model.Product;
+import org.example.backend.model.ProductDto;
 import org.example.backend.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,9 +26,20 @@ public class WarehouseController {
         return productService.getAllProducts();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
-        return ResponseEntity.of(productService.getProductById(id));
+    @GetMapping("/{productId}")
+    public ResponseEntity<Product> getProductById(@PathVariable String productId) {
+        return ResponseEntity.of(productService.getProductById(productId));
+    }
+
+    @PostMapping("/add")
+    public Product addProduct(@RequestBody ProductDto product) {
+        return productService.addProduct(product);
+    }
+
+    @DeleteMapping("{productId}")
+    public void deleteProduct(@PathVariable("productId") String productId) {
+        if(!productService.deleteProduct(productId))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object does not exist");
     }
 
 }
