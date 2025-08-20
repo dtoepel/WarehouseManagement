@@ -1,4 +1,4 @@
-import type {Product} from "./Product.ts";
+import type {Product} from "./types/types.ts";
 
 export type ProductTableProps= {
     products: Product[]
