@@ -66,8 +66,19 @@ button.miniButton{
   font-weight: 600; margin-bottom: 12px;
   border-bottom: 1px solid #333; padding-bottom: 8px;
 }
-.modal-close{border:1px solid transparent;cursor:pointer}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid #ddd;padding-bottom:8px}
+.modal-close{
+  border:1px solid transparent;
+  cursor:pointer
+}
+
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+  border-bottom:1px solid #ddd;
+  padding-bottom:8px
+}
 .modal-close--icon{
   display: flex;
   align-items: center;
@@ -137,7 +148,9 @@ button.miniButton{
 .error { font-size: 12px; color: #b91c1c; text-align: left; }
 
 .actions {
-  display: flex; justify-content: flex-end; gap: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
   margin-top: 8px;
 }
 .btn {
@@ -149,7 +162,9 @@ button.miniButton{
   transition: background 0.2s;
 }
 .btn-secondary {
-  background: #f3f4f6; color: #333; border-color: #ddd;
+  background: #f3f4f6;
+  color: #333;
+  border-color: #ddd;
 }
 .btn-secondary:hover {
   background: #e5e7eb;
@@ -196,4 +211,11 @@ button.miniButton{
   color: #111827;
 }
 
-.details dd.tabular { font-variant-numeric: tabular-nums; }
+.details dd.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* dialog backdrop */
+.modal::backdrop {
+  background: rgba(0,0,0,.5);
+}
