@@ -24,7 +24,7 @@ export default function ProductTable(props:Readonly<ProductTableProps>) {
             {props.products.map((product,index) => {
                 const oddEven = index%2==0?"even":"odd"
                 return(
-                <tr className={"shortProductBox"}>
+                <tr key={product.id} className={"shortProductBox"}>
                     <td className={oddEven}><span>{product.name}</span></td>
                     <td className={oddEven}><span>{product.quantity}</span>
                         <button className={"miniButton"}>+</button>

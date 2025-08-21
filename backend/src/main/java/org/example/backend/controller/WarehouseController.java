@@ -4,6 +4,7 @@ import org.example.backend.model.Product;
 import org.example.backend.model.ProductDto;
 import org.example.backend.service.ProductService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,6 +22,11 @@ public class WarehouseController {
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<Product> getProductById(@PathVariable String productId) {
+        return ResponseEntity.of(productService.getProductById(productId));
     }
 
     @PostMapping("/add")

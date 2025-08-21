@@ -1,9 +1,12 @@
 package org.example.backend.service;
 
+import org.example.backend.exceptions.ProductNotFoundException;
 import org.example.backend.model.Product;
 import org.example.backend.model.ProductDto;
 import org.example.backend.repository.ProductRepo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.time.Instant;
 import java.util.List;
@@ -22,6 +25,12 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepo.findAll();
     }
+
+    public Optional<Product> getProductById(String id) {
+        return Optional.ofNullable(productRepo.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id)));
+    }
+
 
     public Product addProduct(ProductDto newProduct) {
         Instant now = Instant.now();

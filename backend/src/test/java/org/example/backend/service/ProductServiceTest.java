@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.exceptions.ProductNotFoundException;
 import org.example.backend.model.Product;
 import org.example.backend.model.ProductDto;
 import org.example.backend.repository.ProductRepo;
@@ -16,6 +17,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.Mockito.*;
 
@@ -95,8 +97,91 @@ class ProductServiceTest {
         verifyNoMoreInteractions(productRepo);
 
     }
+
+    @Test
+    void getAllProducts_returnsListFromRepo() {
+        // given
+        Product p1 = new Product(
+                "p1","USB-C Cable 1m","USB-C to USB-C, 60W",
+                "CAB-USBC-1M",10,6.90,"B2-R05-B04",
+                "2025-08-02T08:30:00Z","2025-08-12T14:02:00Z");
+        Product p2 = new Product(
+                "p2","HDMI Cable 2m","4K@60Hz",
+                "CAB-HDMI-2M",5,5.49,"B3-R03-B02",
+                "2025-08-05T10:15:00Z","2025-08-15T16:20:00Z");
+        when(productRepo.findAll()).thenReturn(java.util.List.of(p1, p2));
+
+        // when
+        java.util.List<Product> result = productService.getAllProducts();
+
+        // then
+        assertThat(result).hasSize(2).containsExactly(p1, p2);
+        verify(productRepo, times(1)).findAll();
+        verifyNoMoreInteractions(productRepo);
+    }
+
+    @Test
+    void deleteProduct_returnsFalse_whenIdMissing() {
+        // given
+        String id = "missing";
+        when(productRepo.findById(id)).thenReturn(Optional.empty());
+
+        // when
+        boolean result = productService.deleteProduct(id);
+
+        // then
+        assertThat(result).isFalse();
+        verify(productRepo, times(1)).findById(id);
+        verify(productRepo, never()).deleteById(anyString());
+        verifyNoMoreInteractions(productRepo);
+    }
+
+    @Test
+    void getAllProducts_returnsEmptyList_whenRepoEmpty() {
+        // given
+        when(productRepo.findAll()).thenReturn(java.util.Collections.emptyList());
+
+        // when
+        java.util.List<Product> result = productService.getAllProducts();
+
+        // then
+        assertThat(result).isEmpty();
+        verify(productRepo, times(1)).findAll();
+        verifyNoMoreInteractions(productRepo);
+    }
+
+
+    @Test
+    void getProductById_returnsProduct_whenFound() {
+        // given
+        String id = "p1";
+        Product p = new Product(
+                id, "USB-C Kablo 1m", "USB-C to USB-C, 60W",
+                "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
+                "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
+        when(productRepo.findById(id)).thenReturn(Optional.of(p));
+
+        // when
+        Product result = productService.getProductById(id).orElse(null);
+
+        // then
+        assertThat(result).isEqualTo(p);
+        verify(productRepo, times(1)).findById(id);
+        verifyNoMoreInteractions(productRepo);
+    }
+
+    @Test
+    void getProductById_throwsProductNotFound_whenMissing() {
+        // given
+        String id = "missing";
+        when(productRepo.findById(id)).thenReturn(Optional.empty());
+
+        // when/then
+        assertThatThrownBy(() -> productService.getProductById(id))
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessageContaining(id);
+
+        verify(productRepo, times(1)).findById(id);
+        verifyNoMoreInteractions(productRepo);
+    }
 }
-
-
-
-

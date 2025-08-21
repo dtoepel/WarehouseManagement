@@ -9,7 +9,7 @@ public record Product (
         String id, // uuid
         String name,
         String description,
-        String stockKeepingUnit, // kind of human readable id
+        String stockKeepingUnit, // kind of human-readable id
         int quantity,
         double price,
         String location,
