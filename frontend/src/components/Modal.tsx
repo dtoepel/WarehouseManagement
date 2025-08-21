@@ -8,7 +8,7 @@ type ModalProps = {
 }
 
 export default function Modal({open, title, onClose, children}:Readonly<ModalProps>) {
-    const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2)}`);
+    const titleId = useRef(`modal-title-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`);
 
     useEffect( () => {
         if (!open) return;
