@@ -115,7 +115,6 @@ button.miniButton{
 
 .field { display: flex; flex-direction: column; gap: 6px; }
 .label { font-size: 13px; font-weight: 600; color: #201f1f; text-align: left; }
-.help { color: #666; }
 
 .input, .textarea {
   font-size: 14px;

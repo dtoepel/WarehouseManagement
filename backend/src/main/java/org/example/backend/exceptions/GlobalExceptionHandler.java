@@ -25,15 +25,4 @@ public class GlobalExceptionHandler {
         pd.setProperty("productId", ex.getProductId());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(pd);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleGeneric(Exception ex, HttpServletRequest req) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
-        pd.setTitle("Unexpected error");
-        pd.setInstance(URI.create(req.getRequestURI()));
-        pd.setProperty("timestamp", Instant.now().toString());
-        pd.setProperty("path", req.getRequestURI());
-        pd.setProperty("errorCode", "GENERIC_ERROR");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(pd);
-    }
 }
