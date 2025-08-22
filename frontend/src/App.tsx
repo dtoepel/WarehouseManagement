@@ -31,6 +31,19 @@ function App() {
         }
     }, [setProducts])
 
+    const loadUser = () => {
+        axios.get('/api/auth/me')
+            .then(response => {
+                console.log(response.data)
+            })
+    }
+
+    function login() {
+        const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080': window.location.origin
+
+        window.open(host + '/oauth2/authorization/github', '_self')
+    }
+
     function deleteProduct(product:Product) {
         axios.delete("/api/products/"+product.id).then(getAllProducts)
     }
@@ -39,6 +52,10 @@ function App() {
         getAllProducts()
             .then()
     }, [getAllProducts])
+
+    useEffect(() => {
+        loadUser();
+    }, []);
 
     const handleProductAdd = (newProduct: Product) => {
         if (newProduct) {
@@ -53,6 +70,7 @@ function App() {
     return (
         <>
             <h1>Warehouse</h1>
+            <button onClick={login}>Login</button>
             <div className="table-toolbar">
                 <button className="productButton" onClick={() => setAddOpen(true)}>
                     Add Product
