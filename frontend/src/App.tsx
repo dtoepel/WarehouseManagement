@@ -1,12 +1,12 @@
-
 import axios from "axios";
 import './App.css'
 import {useCallback, useEffect, useState} from "react";
-import type { Product} from "./types/types.ts";
-import ProductTable from "./ProductTable.tsx";
+import type {Product} from "./types/types.ts";
 import Modal from "./components/Modal.tsx";
 import ProductDetailsCard from "./components/ProductDetailsCard.tsx";
 import AddProduct from "./components/AddProduct.tsx";
+import Home from "./components/Home.tsx";
+import HeaderControl from "./components/HeaderControl.tsx";
 
 function App() {
     const [products, setProducts] = useState<Product[]>([])
@@ -14,8 +14,14 @@ function App() {
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    const openDetails = (p: Product) => {setSelectedProduct(p); setDetailsOpen(true);};
-    const closeDetails = () => {setDetailsOpen(false); setSelectedProduct(null)};
+    const openDetails = (p: Product) => {
+        setSelectedProduct(p);
+        setDetailsOpen(true);
+    };
+    const closeDetails = () => {
+        setDetailsOpen(false);
+        setSelectedProduct(null)
+    };
 
     const [addOpen, setAddOpen] = useState(false);
 
@@ -31,8 +37,8 @@ function App() {
         }
     }, [setProducts])
 
-    function deleteProduct(product:Product) {
-        axios.delete("/api/products/"+product.id).then(getAllProducts)
+    function deleteProduct(product: Product) {
+        axios.delete("/api/products/" + product.id).then(getAllProducts)
     }
 
     useEffect(() => {
@@ -49,40 +55,49 @@ function App() {
         getAllProducts().then()
     }
 
-
     return (
         <>
-            <h1>Warehouse</h1>
-            <div className="table-toolbar">
-                <button className="productButton" onClick={() => setAddOpen(true)}>
-                    Add Product
-                </button>
-            </div>
+            <div className='app-container'>
+                <div className='app-title'>
+                    <h1>Warehouse</h1>
+                </div>
+                <div className='page-header'>
+                    <HeaderControl />
+                    <div className="table-toolbar">
+                        <button className="productButton" onClick={() => setAddOpen(true)}>
+                            Add Product
+                        </button>
+                    </div>
+                </div>
 
-            <ProductTable products={products}
-                          onProductEditButtonClicked={(product:Product) => console.log("Edit Button Clicked: " + product.name)}
+                <div className='app-table'>
+                    <Home products={products}
+                          onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
                           onProductDetailsButtonClicked={openDetails}
-                          onProductDeleteButtonClicked={(product:Product) =>
+                          onProductDeleteButtonClicked={(product: Product) =>
                               deleteProduct(product)}
-            />
-
-
-            {/* ✅ AddProduct modal */}
-            {addOpen && (
-                <Modal open={addOpen} title="Add new product" onClose={() => setAddOpen(false)}>
-                    <AddProduct
-                        onProductAdd={handleProductAdd}
-                        onCancel={() => setAddOpen(false)}
                     />
-                </Modal>
-            )}
+                </div>
+
+                <div className='app-modal'>
+                    {/* ✅ AddProduct modal */}
+                    {addOpen && (
+                        <Modal open={addOpen} title="Add new product" onClose={() => setAddOpen(false)}>
+                            <AddProduct
+                                onProductAdd={handleProductAdd}
+                                onCancel={() => setAddOpen(false)}
+                            />
+                        </Modal>
+                    )}
 
 
-            {detailsOpen && selectedProduct && (
-                <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
-                    <ProductDetailsCard product={selectedProduct}/>
-                </Modal>
-            )}
+                    {detailsOpen && selectedProduct && (
+                        <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
+                            <ProductDetailsCard product={selectedProduct}/>
+                        </Modal>
+                    )}
+                </div>
+            </div>
         </>
     )
 }
