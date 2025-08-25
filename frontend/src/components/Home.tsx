@@ -10,7 +10,6 @@ export type ProductTableProps = {
 export default function Home(props: Readonly<ProductTableProps>) {
     return (
         <div className="home-container">
-
             {/*    Table area*/}
             <div className="table-container">
                 <table>
@@ -49,7 +48,7 @@ export default function Home(props: Readonly<ProductTableProps>) {
                                     </td>
                                     <td data-label="Price: "
                                         className="table-data">
-                                        {product.price}
+                                        {product.price} €
                                     </td>
                                     <td data-label="Quantity: "
                                         className="table-data">
@@ -65,7 +64,7 @@ export default function Home(props: Readonly<ProductTableProps>) {
                                             <span>Edit</span>
                                         </button>
                                         <button className={"action-button"}
-                                                style={{backgroundColor: "#b00", color: "white", fontWeight: "600"}}
+                                                style={{backgroundColor: "#ae4141", color: "white", fontWeight: "600"}}
                                                 onClick={() => {
                                                     props.onProductDeleteButtonClicked(product)
                                                 }}>X

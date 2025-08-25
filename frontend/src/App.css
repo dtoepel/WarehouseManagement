@@ -519,8 +519,10 @@ tbody tr:hover {
     }
 
     .btn-actions {
-        padding: 0;
+        padding: 0 1rem;
         margin: 0 auto;
+        width: 100%;
+        justify-content: space-around;
     }
 
     .table-row {
@@ -545,14 +547,14 @@ tbody tr:hover {
 
         display: block; /* Change from flex to block */
         position: relative;
-        padding: 8px 0 8px 40%;
+        padding: 8px 0 8px 50%;
         text-align: left; /* Align the data to the right */
     }
 
     tbody td:before {
         content: attr(data-label);
         position: absolute;
-        left: 1rem; /* Position label from the left edge of the card */
+        left: 2.75rem; /* Position label from the left edge of the card */
         text-align: left;
         width: 35%; /* Give the label a fixed width */
         font-weight: 600;
