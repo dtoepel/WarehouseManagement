@@ -62,12 +62,7 @@ function App() {
                     <h1>Warehouse</h1>
                 </div>
                 <div className='page-header'>
-                    <HeaderControl />
-                    <div className="table-toolbar">
-                        <button className="productButton" onClick={() => setAddOpen(true)}>
-                            Add Product
-                        </button>
-                    </div>
+                    <HeaderControl onAddProductClick={() => setAddOpen(true)} />
                 </div>
 
                 <div className='app-table'>
