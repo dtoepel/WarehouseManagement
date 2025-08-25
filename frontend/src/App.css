@@ -199,6 +199,7 @@ tr.shortProductBox > td.odd {
 
 .action-button {
     font-size: .75rem;
+    border-radius: .5rem;
 }
 
 .action-button span {
@@ -443,8 +444,9 @@ th, td {
 }
 
 th {
-    font-weight: 900;
-    background-color: #333;
+    font-weight: 700;
+    background-color: #eee;
+    color: #000;
 }
 
 tr {
@@ -510,6 +512,11 @@ tbody tr:hover {
 /*}*/
 /* Mobile Card Layout */
 @media (max-width: 768px) {
+    .header-container {
+        /*justify-content: center;*/
+        /*align-items: center;*/
+    }
+
     .header-controls {
         justify-content: center;
         flex-wrap: wrap;
@@ -525,11 +532,12 @@ tbody tr:hover {
     }
 
     .app-container {
-        padding: 3rem 0;
+       margin-top: 2rem;
     }
 
     .app-title {
-        /*font-size: .5rem;*/
+        text-align: center;
+        font-size: .85rem;
     }
 
     .app-table {
@@ -602,18 +610,18 @@ tbody tr:hover {
     }
 }
 
-/* Tablet Layout */
-@media (max-width: 1024px) {
-    .product-preview {
-        display: none;
-    }
+/*!* Tablet Layout *!*/
+/*@media (max-width: 1024px) {*/
+/*    .product-preview {*/
+/*        display: none;*/
+/*    }*/
 
-    /* Hide less important columns on tablet */
-    th:nth-child(4), td:nth-child(4), /* SKU */
-    th:nth-child(5), td:nth-child(5) { /* Location */
-        display: none;
-    }
-}
+/*    !* Hide less important columns on tablet *!*/
+/*    th:nth-child(4), td:nth-child(4), !* SKU *!*/
+/*    th:nth-child(5), td:nth-child(5) { !* Location *!*/
+/*        display: none;*/
+/*    }*/
+/*}*/
 
 /* Large mobile - show horizontal scroll */
 /*@media (max-width: 992px) and (min-width: 769px) {*/
@@ -627,7 +635,7 @@ tbody tr:hover {
 /*---------------------------------------------------------------*/
 @media (prefers-color-scheme: light) {
     :root {
-        color: #213547;
+        color: #111;
         background-color: #ffffff;
     }
 
