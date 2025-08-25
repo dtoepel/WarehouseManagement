@@ -80,6 +80,16 @@ function App() {
                         </Modal>
                     )}
 
+                    {editOpen && (
+                        <Modal open={editOpen} title="Edit Product"
+                               onClose={() => setEditOpen(false)}>
+                            <EditProduct
+                                onProductEdit={handleProductEdit}
+                                onCancel={() => setEditOpen(false)}
+                                product={product}/>
+                        </Modal>)
+                    }
+
                     {detailsOpen && selectedProduct && (
                         <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
                             <ProductDetailsCard product={selectedProduct}/>
