@@ -8,7 +8,6 @@ export type ProductTableProps = {
 }
 
 export default function Home(props: Readonly<ProductTableProps>) {
-
     return (
         <div className="home-container">
 
@@ -27,43 +26,50 @@ export default function Home(props: Readonly<ProductTableProps>) {
                     </tr>
                     </thead>
                     <tbody className='table-body'>
-                        {
-                            props.products &&
-                            props.products.map((product, index) => {
-                                return (
-                                    <tr key={product.id}>
-                                        <td className="table-data">
-                                            {index+1}
-                                        </td>
-                                        <td className="table-data">
-                                            {product.name}
-                                        </td>
-                                        <td className="table-data">
-                                            {product.stockKeepingUnit}
-                                        </td>
-                                        <td className="table-data">
-                                            {product.location}
-                                        </td>
-                                        <td className="table-data">
-                                            {product.price}
-                                        </td>
-                                        <td className="table-data">
-                                            {product.quantity}
-                                        </td>
-                                        <td className=''>
-                                            <button className={"productButton"}
-                                                    onClick={() => props.onProductDetailsButtonClicked(product)}>Details</button>
-                                            <button className={"productButton"}
-                                                    onClick={() => props.onProductEditButtonClicked(product)}>Edit</button>
-                                            <button className={"miniButton"}
-                                                    style={{backgroundColor:"#b00",color:"white",fontWeight:"bold"}}
-                                                    onClick={() => {
-                                                        props.onProductDeleteButtonClicked(product)
-                                                    }}>X</button></td>
-                                    </tr>
-                                )
-                            })
-                        }
+                    {
+                        props.products &&
+                        props.products.map((product, index) => {
+                            const isEven = index % 2 ? "even" : "odd";
+                            return (
+                                <tr key={product.id} className={`${isEven}`}>
+                                    <td className="table-data">
+                                        {index + 1}
+                                    </td>
+                                    <td className="table-data">
+                                        {product.name}
+                                    </td>
+                                    <td className="table-data">
+                                        {product.stockKeepingUnit}
+                                    </td>
+                                    <td className="table-data">
+                                        {product.location}
+                                    </td>
+                                    <td className="table-data">
+                                        {product.price}
+                                    </td>
+                                    <td className="table-data">
+                                        {product.quantity}
+                                    </td>
+                                    <td className='btn-actions'>
+                                        <button className={"action-button"}
+                                                onClick={() => props.onProductDetailsButtonClicked(product)}>
+                                            <span>Details</span>
+                                        </button>
+                                        <button className={"action-button"}
+                                                onClick={() => props.onProductEditButtonClicked(product)}>
+                                            <span>Edit</span>
+                                        </button>
+                                        <button className={"action-button"}
+                                                style={{backgroundColor: "#b00", color: "white", fontWeight: "600"}}
+                                                onClick={() => {
+                                                    props.onProductDeleteButtonClicked(product)
+                                                }}>X
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
 
                     </tbody>
                 </table>
