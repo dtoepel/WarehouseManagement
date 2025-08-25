@@ -31,7 +31,7 @@ export default function Home(props: Readonly<ProductTableProps>) {
                         props.products.map((product, index) => {
                             const isEven = index % 2 ? "even" : "odd";
                             return (
-                                <tr key={product.id} className={`${isEven} card`}>
+                                <tr key={product.id} className={`table-row ${isEven} card`}>
                                     <td className="table-data">
                                         {index + 1}
                                     </td>
@@ -43,7 +43,7 @@ export default function Home(props: Readonly<ProductTableProps>) {
                                         className="table-data">
                                         {product.stockKeepingUnit}
                                     </td>
-                                    <td data-label=""
+                                    <td data-label="Location: "
                                         className="table-data">
                                         {product.location}
                                     </td>
