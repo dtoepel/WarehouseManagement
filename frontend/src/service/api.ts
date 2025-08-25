@@ -7,6 +7,12 @@ const addProduct = async (data: NewProduct) => {
         .then(res => res.data);
 };
 
+const editProduct = async (data: Product) => {
+    return await axios.put<Product>("/api/products/:id", data)
+        .then(res => res.data)
+}
+
 export {
     addProduct,
+    editProduct
 }
