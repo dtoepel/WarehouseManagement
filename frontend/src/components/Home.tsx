@@ -31,23 +31,28 @@ export default function Home(props: Readonly<ProductTableProps>) {
                         props.products.map((product, index) => {
                             const isEven = index % 2 ? "even" : "odd";
                             return (
-                                <tr key={product.id} className={`${isEven}`}>
+                                <tr key={product.id} className={`${isEven} card`}>
                                     <td className="table-data">
                                         {index + 1}
                                     </td>
-                                    <td className="table-data">
+                                    <td data-label="Name: "
+                                        className="table-data">
                                         {product.name}
                                     </td>
-                                    <td className="table-data">
+                                    <td data-label="SKU: "
+                                        className="table-data">
                                         {product.stockKeepingUnit}
                                     </td>
-                                    <td className="table-data">
+                                    <td data-label=""
+                                        className="table-data">
                                         {product.location}
                                     </td>
-                                    <td className="table-data">
+                                    <td data-label="Price: "
+                                        className="table-data">
                                         {product.price}
                                     </td>
-                                    <td className="table-data">
+                                    <td data-label="Quantity: "
+                                        className="table-data">
                                         {product.quantity}
                                     </td>
                                     <td className='btn-actions'>
