@@ -58,19 +58,13 @@ function App() {
     return (
         <>
             <div className='app-container'>
-                <div className='page-header'>
-                    <HeaderControl onAddProductClick={() => setAddOpen(true)} />
-                </div>
-
-                <div className='app-table'>
-                    <Home products={products}
-                          onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
-                          onProductDetailsButtonClicked={openDetails}
-                          onProductDeleteButtonClicked={(product: Product) =>
-                              deleteProduct(product)}
-                    />
-                </div>
-
+                <HeaderControl onAddProductClick={() => setAddOpen(true)} />
+                <Home products={products}
+                      onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
+                      onProductDetailsButtonClicked={openDetails}
+                      onProductDeleteButtonClicked={(product: Product) =>
+                          deleteProduct(product)}
+                />
                 <div className='app-modal'>
                     {/* ✅ AddProduct modal */}
                     {addOpen && (

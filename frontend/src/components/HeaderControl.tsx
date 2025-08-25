@@ -4,7 +4,7 @@ type HeaderControlProps = {
 
 export default function HeaderControl({onAddProductClick}: HeaderControlProps) {
     return (
-        <div>
+        <div className='header-container'>
             <div className='app-title'>
                 <h1>Warehouse Management</h1>
             </div>
