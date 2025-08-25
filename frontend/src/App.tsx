@@ -7,11 +7,13 @@ import ProductDetailsCard from "./components/ProductDetailsCard.tsx";
 import AddProduct from "./components/AddProduct.tsx";
 import Home from "./components/Home.tsx";
 import HeaderControl from "./components/HeaderControl.tsx";
+import EditProduct from "./components/EditProduct.tsx";
 
 function App() {
     const [products, setProducts] = useState<Product[]>([])
-
-    const [detailsOpen, setDetailsOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState<boolean>(false);
+    const [editOpen, setEditOpen] = useState<boolean>(false)
+    const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     const openDetails = (p: Product) => {
@@ -22,8 +24,6 @@ function App() {
         setDetailsOpen(false);
         setSelectedProduct(null)
     };
-
-    const [addOpen, setAddOpen] = useState(false);
 
     const getAllProducts = useCallback(async () => {
         {
@@ -55,10 +55,14 @@ function App() {
         getAllProducts().then()
     }
 
+    const handleProductEdit = (product: Product) => {
+
+    }
+
     return (
         <>
             <div className='app-container'>
-                <HeaderControl onAddProductClick={() => setAddOpen(true)} />
+                <HeaderControl onAddProductClick={() => setAddOpen(true)}/>
                 <Home products={products}
                       onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
                       onProductDetailsButtonClicked={openDetails}
@@ -75,7 +79,6 @@ function App() {
                             />
                         </Modal>
                     )}
-
 
                     {detailsOpen && selectedProduct && (
                         <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
