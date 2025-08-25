@@ -58,9 +58,6 @@ function App() {
     return (
         <>
             <div className='app-container'>
-                <div className='app-title'>
-                    <h1>Warehouse</h1>
-                </div>
                 <div className='page-header'>
                     <HeaderControl onAddProductClick={() => setAddOpen(true)} />
                 </div>
