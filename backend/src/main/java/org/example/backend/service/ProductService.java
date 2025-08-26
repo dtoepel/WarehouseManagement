@@ -32,7 +32,7 @@ public class ProductService {
 
 
     public Product addProduct(ProductDto newProduct) {
-        Instant now = Instant.now();
+        String timeValue = Instant.now().toString();
 
         Product product = new Product(
                 idService.generateId(),
@@ -42,8 +42,8 @@ public class ProductService {
                 newProduct.quantity(),
                 newProduct.price(),
                 newProduct.location(),
-                now.toString(),
-                now.toString()
+                timeValue,
+                timeValue
         );
 
         productRepo.save(product);
@@ -62,7 +62,7 @@ public class ProductService {
                 .withStockKeepingUnit(newProduct.stockKeepingUnit())
                 .withQuantity(newProduct.quantity())
                 .withPrice(newProduct.price())
-                .withLocation(newProduct.location());
+                .withUpdatedAt(Instant.now().toString());
 
         return productRepo.save(updatedProduct);
     }
