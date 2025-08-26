@@ -2,13 +2,14 @@
 import axios from "axios";
 import './App.css'
 import {useCallback, useEffect, useState} from "react";
-import type { Product} from "./types/types.ts";
-import ProductTable from "./ProductTable.tsx";
+import type {Product} from "./types/types.ts";
 import Modal from "./components/Modal.tsx";
 import ProductDetailsCard from "./components/ProductDetailsCard.tsx";
 import AddProduct from "./components/AddProduct.tsx";
 import {Link, Route, Routes} from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute.tsx";
+import Home from "./components/Home.tsx";
+import HeaderControl from "./components/HeaderControl.tsx";
 
 function App() {
     const [user, setUser] = useState<string | undefined | null>(undefined);
@@ -18,10 +19,18 @@ function App() {
     const [detailsOpen, setDetailsOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-    const openDetails = (p: Product) => {setSelectedProduct(p); setDetailsOpen(true);};
-    const closeDetails = () => {setDetailsOpen(false); setSelectedProduct(null)};
+    const openDetails = (p: Product) => {
+        setSelectedProduct(p);
+        setDetailsOpen(true);
+    };
+    const closeDetails = () => {
+        setDetailsOpen(false);
+        setSelectedProduct(null)
+    };
 
     const [addOpen, setAddOpen] = useState(false);
+
+    const [confirmDeleteProduct, setConfirmDeleteProduct] = useState<Product|null>(null);
 
     const getAllProducts = useCallback(async () => {
         {
@@ -88,48 +97,64 @@ function App() {
                 }/>
                 <Route element={<ProtectedRoute user={user}/>}>
                     <Route path={"/dashboard"} element={<>
+                        <div className='app-container'>
+                            <HeaderControl onAddProductClick={() => setAddOpen(true)} />
+                            <Home products={products}
+                                  onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
+                                  onProductDetailsButtonClicked={openDetails}
+                                  onProductDeleteButtonClicked={(product: Product) =>
+                                      setConfirmDeleteProduct(product)}
+                            />
+                            <div className='app-modal'>
+                                {/* ✅ AddProduct modal */}
+                                {addOpen && (
+                                    <Modal open={addOpen} title="Add new product" onClose={() => setAddOpen(false)}>
+                                        <AddProduct
+                                            onProductAdd={handleProductAdd}
+                                            onCancel={() => setAddOpen(false)}
+                                        />
+                                    </Modal>
+                                )}
 
-            <div className="table-toolbar">
-                <button className="productButton" onClick={() => setAddOpen(true)}>
-                    Add Product
-                </button>
-            </div>
 
-            <ProductTable products={products}
-                          onProductEditButtonClicked={(product:Product) => console.log("Edit Button Clicked: " + product.name)}
-                          onProductDetailsButtonClicked={openDetails}
-                          onProductDeleteButtonClicked={(product:Product) =>
-                              deleteProduct(product)}
-            />
+                                {detailsOpen && selectedProduct && (
+                                    <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
+                                        <ProductDetailsCard product={selectedProduct}/>
+                                    </Modal>
+                                )}
+                            </div>
+                        </div>
 
 
-            {/* ✅ AddProduct modal */}
-            {addOpen && (
-                <Modal open={addOpen} title="Add new product" onClose={() => setAddOpen(false)}>
-                    <AddProduct
-                        onProductAdd={handleProductAdd}
-                        onCancel={() => setAddOpen(false)}
-                    />
+            {confirmDeleteProduct != null && (
+                <Modal open={true} title={"Confirm Delete "+confirmDeleteProduct.name} onClose={() => setConfirmDeleteProduct(null)}>
+                    <div>
+                        <button onClick={() => {
+                            deleteProduct(confirmDeleteProduct);
+                            setConfirmDeleteProduct(null)}}>
+                            Yes
+                        </button>
+                        <button onClick={() => {setConfirmDeleteProduct(null)}}>
+                            No
+                        </button>
+                        <button>
+                            Maybe
+                        </button>
+                    </div>
                 </Modal>
             )}
 
+                </> }></Route>
+        </Route>
+</Routes>
+    <br/>
+    <button onClick={login}>Login</button>
+    <button onClick={logout}>Logout</button>
+    <Link to={"/dashboard"}>Dashboard</Link>
 
-            {detailsOpen && selectedProduct && (
-                <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
-                    <ProductDetailsCard product={selectedProduct}/>
-                </Modal>
-            )}
+</>
 
-                   </> }></Route>
-            </Route>
-        </Routes>
-            <br/>
-            <button onClick={login}>Login</button>
-            <button onClick={logout}>Logout</button>
-            <Link to={"/dashboard"}>Dashboard</Link>
-
-        </>
-    )
+)
 }
 
 export default App
