@@ -126,35 +126,33 @@ function App() {
                         </div>
 
 
-            {confirmDeleteProduct != null && (
-                <Modal open={true} title={"Confirm Delete "+confirmDeleteProduct.name} onClose={() => setConfirmDeleteProduct(null)}>
-                    <div>
-                        <button onClick={() => {
-                            deleteProduct(confirmDeleteProduct);
-                            setConfirmDeleteProduct(null)}}>
-                            Yes
-                        </button>
-                        <button onClick={() => {setConfirmDeleteProduct(null)}}>
-                            No
-                        </button>
-                        <button>
-                            Maybe
-                        </button>
-                    </div>
-                </Modal>
-            )}
+                        {confirmDeleteProduct != null && (
+                            <Modal open={true} title={"Confirm Delete "+confirmDeleteProduct.name} onClose={() => setConfirmDeleteProduct(null)}>
+                                <div>
+                                    <button onClick={() => {
+                                        deleteProduct(confirmDeleteProduct);
+                                        setConfirmDeleteProduct(null)}}>
+                                        Yes
+                                    </button>
+                                    <button onClick={() => {setConfirmDeleteProduct(null)}}>
+                                        No
+                                    </button>
+                                    <button>
+                                        Maybe
+                                    </button>
+                                </div>
+                            </Modal>
+                        )}
 
-                </> }></Route>
-        </Route>
-</Routes>
-    <br/>
-    <button onClick={login}>Login</button>
-    <button onClick={logout}>Logout</button>
-    <Link to={"/dashboard"}>Dashboard</Link>
-
-</>
-
-)
+                    </> }></Route>
+                </Route>
+            </Routes>
+            <br/>
+            <button onClick={login}>Login</button>
+            <button onClick={logout}>Logout</button>
+            <Link to={"/dashboard"}>Dashboard</Link>
+        </>
+    )
 }
 
 export default App
