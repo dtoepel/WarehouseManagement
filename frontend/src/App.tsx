@@ -1,6 +1,6 @@
 import axios from "axios";
 import './App.css'
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import type {Product} from "./types/types.ts";
 import Modal from "./components/Modal.tsx";
 import ProductDetailsCard from "./components/ProductDetailsCard.tsx";
@@ -59,7 +59,6 @@ function App() {
 
     const handleProductAdd = (newProduct: Product) => {
         if (newProduct) {
-
             setProducts([newProduct, ...products])
         }
         setAddOpen(false); //close modal
@@ -76,20 +75,40 @@ function App() {
         setEditOpen(false);
     }
 
+    //Search Bar Implementation
+    const [query, setQuery] = useState("");
+
+    const filteredProducts = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return products;
+        return products.filter(p => {
+            const name = (p.name ?? "").toLowerCase();
+            const sku  = (p.stockKeepingUnit ?? "").toLowerCase();
+            return name.includes(q) || sku.includes(q);
+        });
+    }, [products, query]);
+
     return (
         <>
             <div className='app-container'>
-                <HeaderControl onAddProductClick={() => setAddOpen(true)} />
-                <Home products={products}
+                <HeaderControl
+                    onAddProductClick={() => setAddOpen(true)}
+                    query={query}
+                    onQueryChange={setQuery}
+                    filteredCount={filteredProducts.length}
+                    totalCount={products.length}
+                />
+                <Home products={filteredProducts}
                       onProductEditButtonClicked={openEdit}
                       onProductDetailsButtonClicked={openDetails}
                       onProductDeleteButtonClicked={(product: Product) =>
                           setConfirmDeleteProduct(product)}
                 />
+
                 <div className='app-modal'>
-                    {/* ✅ AddProduct modal */}
+                    {/* AddProduct modal */}
                     {addOpen && (
-                        <Modal open={addOpen} title="Add new product" onClose={() => setAddOpen(false)}>
+                        <Modal open={addOpen} title="Add New Product" onClose={() => setAddOpen(false)}>
                             <AddProduct
                                 onProductAdd={handleProductAdd}
                                 onCancel={() => setAddOpen(false)}
@@ -108,7 +127,7 @@ function App() {
                     }
 
                     {detailsOpen && selectedProduct && (
-                        <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
+                        <Modal open={detailsOpen} title="Product Details" onClose={closeDetails}>
                             <ProductDetailsCard product={selectedProduct}/>
                         </Modal>
                     )}

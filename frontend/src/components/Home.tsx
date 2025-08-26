@@ -1,10 +1,10 @@
 import type {Product} from "../types/types.ts";
 
 export type ProductTableProps = {
-    products: Product[]
-    onProductEditButtonClicked: (product: Product) => void
-    onProductDetailsButtonClicked: (product: Product) => void
-    onProductDeleteButtonClicked: (product: Product) => void
+    products: Product[];
+    onProductEditButtonClicked: (product: Product) => void;
+    onProductDetailsButtonClicked: (product: Product) => void;
+    onProductDeleteButtonClicked: (product: Product) => void;
 }
 
 export default function Home(props: Readonly<ProductTableProps>) {
@@ -25,7 +25,13 @@ export default function Home(props: Readonly<ProductTableProps>) {
                     </tr>
                     </thead>
                     <tbody className='table-body'>
-                    {
+                    {(!props.products || props.products.length === 0) ? (
+                        <tr>
+                            <td colSpan={7} style={{ padding: 12, color: "#666", textAlign: "center" }}>
+                                <i>No results. Try a different search.</i>
+                            </td>
+                        </tr>
+                    ) : (
                         props.products &&
                         props.products.map((product, index) => {
                             const isEven = index % 2 ? "even" : "odd";
@@ -73,8 +79,8 @@ export default function Home(props: Readonly<ProductTableProps>) {
                                 </tr>
                             )
                         })
+                    )
                     }
-
                     </tbody>
                 </table>
             </div>
