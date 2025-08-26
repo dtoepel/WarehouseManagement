@@ -1,6 +1,6 @@
 import axios from "axios";
 import './App.css'
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import type {Product} from "./types/types.ts";
 import Modal from "./components/Modal.tsx";
 import ProductDetailsCard from "./components/ProductDetailsCard.tsx";
@@ -48,18 +48,34 @@ function App() {
 
     const handleProductAdd = (newProduct: Product) => {
         if (newProduct) {
-
             setProducts([newProduct, ...products])
         }
         setAddOpen(false); //close modal
         getAllProducts().then()
     }
 
+    //Search Bar Implementation
+    const [query, setQuery] = useState("");
+
+    const filteredProducts = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return products;
+        return products.filter(p => {
+            const name = (p.name ?? "").toLowerCase();
+            const sku  = (p.stockKeepingUnit ?? "").toLowerCase();
+            return name.includes(q) || sku.includes(q);
+        });
+    }, [products, query]);
+
     return (
         <>
             <div className='app-container'>
-                <HeaderControl onAddProductClick={() => setAddOpen(true)} />
-                <Home products={products}
+                <HeaderControl
+                    onAddProductClick={() => setAddOpen(true)}
+                    query={query}
+                    onQueryChange={setQuery}
+                />
+                <Home products={filteredProducts}
                       onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
                       onProductDetailsButtonClicked={openDetails}
                       onProductDeleteButtonClicked={(product: Product) =>
