@@ -1,5 +1,6 @@
 package org.example.backend.controller;
 
+import org.example.backend.exceptions.InvalidRequestException;
 import org.example.backend.model.Product;
 import org.example.backend.model.ProductDto;
 import org.example.backend.service.ProductService;
@@ -36,8 +37,15 @@ public class WarehouseController {
 
     @DeleteMapping("{productId}")
     public void deleteProduct(@PathVariable("productId") String productId) {
-        if(!productService.deleteProduct(productId))
+        if (!productService.deleteProduct(productId))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Object does not exist");
+    }
+
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable String id,
+                                 @RequestBody ProductDto newProduct)
+            throws InvalidRequestException {
+        return productService.updateProduct(id, newProduct);
     }
 
 }
