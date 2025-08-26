@@ -15,6 +15,7 @@ function App() {
     const [editOpen, setEditOpen] = useState<boolean>(false)
     const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [confirmDeleteProduct, setConfirmDeleteProduct] = useState<Product|null>(null);
 
     const openDetails = (p: Product) => {
         setSelectedProduct(p);
@@ -62,12 +63,12 @@ function App() {
     return (
         <>
             <div className='app-container'>
-                <HeaderControl onAddProductClick={() => setAddOpen(true)}/>
+                <HeaderControl onAddProductClick={() => setAddOpen(true)} />
                 <Home products={products}
                       onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
                       onProductDetailsButtonClicked={openDetails}
                       onProductDeleteButtonClicked={(product: Product) =>
-                          deleteProduct(product)}
+                          setConfirmDeleteProduct(product)}
                 />
                 <div className='app-modal'>
                     {/* ✅ AddProduct modal */}
@@ -97,6 +98,24 @@ function App() {
                     )}
                 </div>
             </div>
+
+            {confirmDeleteProduct != null && (
+                <Modal open={true} title={"Confirm Delete "+confirmDeleteProduct.name} onClose={() => setConfirmDeleteProduct(null)}>
+                    <div>
+                        <button onClick={() => {
+                            deleteProduct(confirmDeleteProduct);
+                            setConfirmDeleteProduct(null)}}>
+                            Yes
+                        </button>
+                        <button onClick={() => {setConfirmDeleteProduct(null)}}>
+                            No
+                        </button>
+                        <button>
+                            Maybe
+                        </button>
+                    </div>
+                </Modal>
+            )}
         </>
     )
 }
