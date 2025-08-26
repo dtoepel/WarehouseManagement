@@ -15,6 +15,7 @@ function App() {
     const [editOpen, setEditOpen] = useState<boolean>(false)
     const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectEditProduct, setSelectEditProduct] = useState<Product>();
     const [confirmDeleteProduct, setConfirmDeleteProduct] = useState<Product|null>(null);
 
     const openDetails = (p: Product) => {
@@ -24,6 +25,15 @@ function App() {
     const closeDetails = () => {
         setDetailsOpen(false);
         setSelectedProduct(null)
+    };
+
+    const openEdit = (product: Product) => {
+        setSelectEditProduct(product);
+        setEditOpen(true);
+    };
+    const closeEdit = () => {
+        setEditOpen(false);
+        // setSelectEditProduct(null)
     };
 
     const getAllProducts = useCallback(async () => {
@@ -57,7 +67,13 @@ function App() {
     }
 
     const handleProductEdit = (product: Product) => {
+        if (product) {
 
+            setProducts([product, ...products])
+        }
+
+        setEditOpen(false);
+        getAllProducts().then();
     }
 
     return (
@@ -65,7 +81,7 @@ function App() {
             <div className='app-container'>
                 <HeaderControl onAddProductClick={() => setAddOpen(true)} />
                 <Home products={products}
-                      onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
+                      onProductEditButtonClicked={openEdit}
                       onProductDetailsButtonClicked={openDetails}
                       onProductDeleteButtonClicked={(product: Product) =>
                           setConfirmDeleteProduct(product)}
@@ -81,13 +97,13 @@ function App() {
                         </Modal>
                     )}
 
-                    {editOpen && (
+                    {editOpen && selectEditProduct && (
                         <Modal open={editOpen} title="Edit Product"
-                               onClose={() => setEditOpen(false)}>
+                               onClose={closeEdit}>
                             <EditProduct
                                 onProductEdit={handleProductEdit}
                                 onCancel={() => setEditOpen(false)}
-                                product={product}/>
+                                product={selectEditProduct}/>
                         </Modal>)
                     }
 
