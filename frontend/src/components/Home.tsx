@@ -28,7 +28,7 @@ export default function Home(props: Readonly<ProductTableProps>) {
                     {(!props.products || props.products.length === 0) ? (
                         <tr>
                             <td colSpan={7} style={{ padding: 12, color: "#666", textAlign: "center" }}>
-                                No results. Try a different search.
+                                <i>No results. Try a different search.</i>
                             </td>
                         </tr>
                     ) : (

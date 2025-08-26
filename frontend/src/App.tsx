@@ -74,17 +74,23 @@ function App() {
                     onAddProductClick={() => setAddOpen(true)}
                     query={query}
                     onQueryChange={setQuery}
+                    filteredCount={filteredProducts.length}
+                    totalCount={products.length}
                 />
+
+
                 <Home products={filteredProducts}
                       onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
                       onProductDetailsButtonClicked={openDetails}
                       onProductDeleteButtonClicked={(product: Product) =>
                           deleteProduct(product)}
                 />
+
+
                 <div className='app-modal'>
                     {/* ✅ AddProduct modal */}
                     {addOpen && (
-                        <Modal open={addOpen} title="Add new product" onClose={() => setAddOpen(false)}>
+                        <Modal open={addOpen} title="Add New Product" onClose={() => setAddOpen(false)}>
                             <AddProduct
                                 onProductAdd={handleProductAdd}
                                 onCancel={() => setAddOpen(false)}
@@ -94,7 +100,7 @@ function App() {
 
 
                     {detailsOpen && selectedProduct && (
-                        <Modal open={detailsOpen} title="Product details" onClose={closeDetails}>
+                        <Modal open={detailsOpen} title="Product Details" onClose={closeDetails}>
                             <ProductDetailsCard product={selectedProduct}/>
                         </Modal>
                     )}
