@@ -1,12 +1,11 @@
 package org.example.backend.service;
 
+import org.example.backend.exceptions.InvalidRequestException;
 import org.example.backend.exceptions.ProductNotFoundException;
 import org.example.backend.model.Product;
 import org.example.backend.model.ProductDto;
 import org.example.backend.repository.ProductRepo;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.time.Instant;
 import java.util.List;
@@ -50,6 +49,21 @@ public class ProductService {
         productRepo.save(product);
 
         return product;
+    }
+
+    public Product updateProduct(String id, ProductDto newProduct) throws InvalidRequestException {
+        Product existingProduct = productRepo.findById(id)
+                .orElseThrow(() -> new InvalidRequestException(
+                        "The Product ID is invalid. It can not be edit."));
+
+        existingProduct.withName(newProduct.name());
+        existingProduct.withDescription(newProduct.description());
+        existingProduct.withStockKeepingUnit(newProduct.stockKeepingUnit());
+        existingProduct.withQuantity(newProduct.quantity());
+        existingProduct.withPrice(newProduct.price());
+        existingProduct.withLocation(newProduct.location());
+
+        return productRepo.save(existingProduct);
     }
 
     public boolean deleteProduct(String productId) {
