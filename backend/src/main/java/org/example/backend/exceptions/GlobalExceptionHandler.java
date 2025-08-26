@@ -25,4 +25,16 @@ public class GlobalExceptionHandler {
         pd.setProperty("productId", ex.getProductId());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(pd);
     }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<String> handleInvalidRequestException(InvalidRequestException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    // You can add more exception handlers here
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGenericException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An unexpected error occurred");
+    }
 }
