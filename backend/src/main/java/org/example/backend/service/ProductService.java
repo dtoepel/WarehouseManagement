@@ -62,6 +62,7 @@ public class ProductService {
                 .withStockKeepingUnit(newProduct.stockKeepingUnit())
                 .withQuantity(newProduct.quantity())
                 .withPrice(newProduct.price())
+                .withLocation(newProduct.location())
                 .withUpdatedAt(Instant.now().toString());
 
         return productRepo.save(updatedProduct);
