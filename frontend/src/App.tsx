@@ -7,12 +7,16 @@ import ProductDetailsCard from "./components/ProductDetailsCard.tsx";
 import AddProduct from "./components/AddProduct.tsx";
 import Home from "./components/Home.tsx";
 import HeaderControl from "./components/HeaderControl.tsx";
+import EditProduct from "./components/EditProduct.tsx";
 
 function App() {
     const [products, setProducts] = useState<Product[]>([])
-
-    const [detailsOpen, setDetailsOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState<boolean>(false);
+    const [editOpen, setEditOpen] = useState<boolean>(false)
+    const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectEditProduct, setSelectEditProduct] = useState<Product>();
+    const [confirmDeleteProduct, setConfirmDeleteProduct] = useState<Product|null>(null);
 
     const openDetails = (p: Product) => {
         setSelectedProduct(p);
@@ -23,9 +27,14 @@ function App() {
         setSelectedProduct(null)
     };
 
-    const [addOpen, setAddOpen] = useState(false);
-
-    const [confirmDeleteProduct, setConfirmDeleteProduct] = useState<Product|null>(null);
+    const openEdit = (product: Product) => {
+        setSelectEditProduct(product);
+        setEditOpen(true);
+    };
+    const closeEdit = () => {
+        setEditOpen(false);
+        // setSelectEditProduct(null)
+    };
 
     const getAllProducts = useCallback(async () => {
         {
@@ -56,6 +65,16 @@ function App() {
         getAllProducts().then()
     }
 
+    const handleProductEdit = (product: Product) => {
+        if (product) {
+            setProducts(prevProducts =>
+            prevProducts.map(p =>
+            p.id === product.id ? product : p))
+        }
+
+        setEditOpen(false);
+    }
+
     //Search Bar Implementation
     const [query, setQuery] = useState("");
 
@@ -79,18 +98,15 @@ function App() {
                     filteredCount={filteredProducts.length}
                     totalCount={products.length}
                 />
-
-
                 <Home products={filteredProducts}
-                      onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
+                      onProductEditButtonClicked={openEdit}
                       onProductDetailsButtonClicked={openDetails}
                       onProductDeleteButtonClicked={(product: Product) =>
                           setConfirmDeleteProduct(product)}
                 />
 
-
                 <div className='app-modal'>
-                    {/* ✅ AddProduct modal */}
+                    {/* AddProduct modal */}
                     {addOpen && (
                         <Modal open={addOpen} title="Add New Product" onClose={() => setAddOpen(false)}>
                             <AddProduct
@@ -100,6 +116,15 @@ function App() {
                         </Modal>
                     )}
 
+                    {editOpen && selectEditProduct && (
+                        <Modal open={editOpen} title="Edit Product"
+                               onClose={closeEdit}>
+                            <EditProduct
+                                onProductEdit={handleProductEdit}
+                                onCancel={() => setEditOpen(false)}
+                                product={selectEditProduct}/>
+                        </Modal>)
+                    }
 
                     {detailsOpen && selectedProduct && (
                         <Modal open={detailsOpen} title="Product Details" onClose={closeDetails}>
@@ -108,7 +133,7 @@ function App() {
                     )}
                 </div>
             </div>
-        
+
             {confirmDeleteProduct != null && (
                 <Modal open={true} title={"Confirm Delete "+confirmDeleteProduct.name} onClose={() => setConfirmDeleteProduct(null)}>
                     <div>

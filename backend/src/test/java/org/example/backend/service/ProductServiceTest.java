@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import org.example.backend.exceptions.InvalidRequestException;
 import org.example.backend.exceptions.ProductNotFoundException;
 import org.example.backend.model.Product;
 import org.example.backend.model.ProductDto;
@@ -16,9 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.Instant;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.within;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -84,7 +83,7 @@ class ProductServiceTest {
 
     @Test
     void deleteProduct_shouldRemoveProduct_whenCalledWithValidId() {
-        Product existing = new Product( "p1", "USB-C Cable 1m", "USB-C to USB-C, 60W",
+        Product existing = new Product("p1", "USB-C Cable 1m", "USB-C to USB-C, 60W",
                 "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
                 "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
 
@@ -92,7 +91,7 @@ class ProductServiceTest {
 
         productService.deleteProduct("p1");
 
-        verify(productRepo,times(1)).deleteById("p1");
+        verify(productRepo, times(1)).deleteById("p1");
 
         verifyNoMoreInteractions(productRepo);
 
@@ -102,13 +101,13 @@ class ProductServiceTest {
     void getAllProducts_returnsListFromRepo() {
         // given
         Product p1 = new Product(
-                "p1","USB-C Cable 1m","USB-C to USB-C, 60W",
-                "CAB-USBC-1M",10,6.90,"B2-R05-B04",
-                "2025-08-02T08:30:00Z","2025-08-12T14:02:00Z");
+                "p1", "USB-C Cable 1m", "USB-C to USB-C, 60W",
+                "CAB-USBC-1M", 10, 6.90, "B2-R05-B04",
+                "2025-08-02T08:30:00Z", "2025-08-12T14:02:00Z");
         Product p2 = new Product(
-                "p2","HDMI Cable 2m","4K@60Hz",
-                "CAB-HDMI-2M",5,5.49,"B3-R03-B02",
-                "2025-08-05T10:15:00Z","2025-08-15T16:20:00Z");
+                "p2", "HDMI Cable 2m", "4K@60Hz",
+                "CAB-HDMI-2M", 5, 5.49, "B3-R03-B02",
+                "2025-08-05T10:15:00Z", "2025-08-15T16:20:00Z");
         when(productRepo.findAll()).thenReturn(java.util.List.of(p1, p2));
 
         // when
@@ -184,4 +183,107 @@ class ProductServiceTest {
         verify(productRepo, times(1)).findById(id);
         verifyNoMoreInteractions(productRepo);
     }
+
+    @Test
+    void updateProduct_returnsUpdatedProduct_whenCalledWithValidIdAndValidData() {
+        ProductRepo mockRepo = mock(ProductRepo.class);
+        IdService mockIdService = mock(IdService.class);
+        ProductService mockService = new ProductService(mockRepo, mockIdService);
+
+        // Capture time windows
+        Instant beforeUpdate = Instant.now();
+
+        // given
+        String id = "1";
+        Instant originalCreatedTime = beforeUpdate.minusSeconds(3600); // 1 hour ago
+        Product existingProduct = new Product(
+                id, "USB-C Kablo 1m",
+                "USB-C to USB-C, 60W",
+                "CAB-USBC-1M",
+                10, 6.90,
+                "B2-R05-B04",
+                originalCreatedTime.toString(),
+                originalCreatedTime.toString()); // Initially same
+
+        ProductDto updatedProductDto = new ProductDto(
+                "USB-C Kablo 1m - updated",
+                "USB-C to USB-C, 60W - updated",
+                "CAB-USBC-1M - updated",
+                100, 7.90,
+                "B2-R05-B04 - updated");
+
+        when(mockRepo.findById(id))
+                .thenReturn(Optional.of(existingProduct));
+
+        when(mockRepo.save(any(Product.class)))
+                .thenAnswer(invocation -> {
+                    Product savedProduct = invocation.getArgument(0);
+
+                    // Assert properties are updated correctly
+                    assertThat(savedProduct.id()).isEqualTo(id);
+                    assertThat(savedProduct.name()).isEqualTo(updatedProductDto.name());
+                    assertThat(savedProduct.description()).isEqualTo(updatedProductDto.description());
+                    assertThat(savedProduct.stockKeepingUnit()).isEqualTo(updatedProductDto.stockKeepingUnit());
+                    assertThat(savedProduct.quantity()).isEqualTo(updatedProductDto.quantity());
+                    assertThat(savedProduct.price()).isEqualTo(updatedProductDto.price());
+                    assertThat(savedProduct.location()).isEqualTo(updatedProductDto.location());
+
+                    // Assert timestamps
+                    assertThat(savedProduct.createdAt()).isEqualTo(originalCreatedTime.toString()); // Should stay same
+                    // updatedAt should be newer than createdAt
+                    Instant updatedAt = Instant.parse(savedProduct.updatedAt());
+                    assertThat(updatedAt).isAfter(originalCreatedTime);
+
+                    return savedProduct;
+                });
+
+        // when
+        Product actualUpdatedProduct = mockService.updateProduct(id, updatedProductDto);
+        Instant afterUpdate = Instant.now();
+
+        // then
+        assertThat(actualUpdatedProduct.id()).isEqualTo(id);
+        assertThat(actualUpdatedProduct.name()).isEqualTo(updatedProductDto.name());
+        assertThat(actualUpdatedProduct.description()).isEqualTo(updatedProductDto.description());
+        assertThat(actualUpdatedProduct.stockKeepingUnit()).isEqualTo(updatedProductDto.stockKeepingUnit());
+        assertThat(actualUpdatedProduct.quantity()).isEqualTo(updatedProductDto.quantity());
+        assertThat(actualUpdatedProduct.price()).isEqualTo(updatedProductDto.price());
+        assertThat(actualUpdatedProduct.location()).isEqualTo(updatedProductDto.location());
+
+        // Timestamp assertions
+        Instant createdAt = Instant.parse(actualUpdatedProduct.createdAt());
+        Instant updatedAt = Instant.parse(actualUpdatedProduct.updatedAt());
+
+        assertThat(createdAt).isEqualTo(originalCreatedTime); // createdAt should be unchanged
+        assertThat(updatedAt).isBetween(beforeUpdate.minusSeconds(1), afterUpdate.plusSeconds(1)); // updatedAt should be recent
+        assertThat(updatedAt).isAfter(createdAt); // updatedAt should be after createdAt
+
+        verify(mockRepo).findById(id);
+        verify(mockRepo).save(any(Product.class));
+        verifyNoMoreInteractions(mockRepo, mockIdService);
+    }
+
+    @Test
+    void updateProduct_throwsInvalidRequestException_whenProductNotFound() {
+        ProductRepo mockRepo = mock(ProductRepo.class);
+        IdService mockIdService = mock(IdService.class);
+        ProductService mockService = new ProductService(mockRepo, mockIdService);
+
+        // given
+        String nonExistentId = "invalid-id";
+        ProductDto updateData = new ProductDto("name", "desc", "sku", 10, 5.0, "location");
+
+        when(mockRepo.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> mockService.updateProduct(nonExistentId, updateData))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessage("The Product ID is invalid. It can not be edit.");
+
+        verify(mockRepo).findById(nonExistentId);
+        verify(mockRepo, never()).save(any());
+        verifyNoMoreInteractions(mockRepo, mockIdService);
+    }
+
+
 }

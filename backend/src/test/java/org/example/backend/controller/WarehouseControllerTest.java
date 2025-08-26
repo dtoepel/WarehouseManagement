@@ -8,10 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.Instant;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,6 +31,8 @@ class WarehouseControllerTest {
 
     @Autowired
     private ProductRepo repo;
+    @Autowired
+    private ProductRepo productRepo;
 
     @AfterEach
     void cleanUp() { repo.deleteAll(); }
@@ -148,4 +156,78 @@ class WarehouseControllerTest {
                 .andExpect(jsonPath("$.path").value("/api/products/" + id))
                 .andExpect(jsonPath("$.timestamp").exists());
     }
+
+    @Test
+    @DirtiesContext
+    void updateProduct_shouldReturnUpdatedProduct_whenCalledWithValidId() throws Exception {
+        Instant beforeUpdate = Instant.now();
+
+        // given
+        String id = "1";
+        Instant originalCreatedTime = beforeUpdate.minusSeconds(3600); // 1 hour ago
+
+        Product existingProduct = new Product(
+                id, "USB-C Kablo 1m",
+                "USB-C to USB-C, 60W",
+                "CAB-USBC-1M",
+                10, 6.90,
+                "B2-R05-B04",
+                originalCreatedTime.toString(),
+                originalCreatedTime.toString()); // Initially same
+
+        productRepo.save(existingProduct);
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+{
+                  "name": "USB-C Kablo 1m - updated",
+                  "description": "USB-C to USB-C, 60W - updated",
+                  "stockKeepingUnit": "CAB-USBC-1M - updated",
+                  "quantity": 100,
+                  "price": 7.90,
+                  "location": "B2-R05-B04 - updated"
+}
+"""))
+                //then
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("USB-C Kablo 1m - updated"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("USB-C to USB-C, 60W - updated"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.stockKeepingUnit").value("CAB-USBC-1M - updated"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.quantity").value(100))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(7.90))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.location").value("B2-R05-B04 - updated"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdAt").value(originalCreatedTime.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updatedAt").value(not(equalTo(originalCreatedTime.toString()))));
+
+        Product updatedProduct = productRepo.findById(id).orElseThrow();
+        assertThat(updatedProduct.name()).isEqualTo("USB-C Kablo 1m - updated");
+        assertThat(updatedProduct.createdAt()).isEqualTo(originalCreatedTime.toString());
+        assertThat(Instant.parse(updatedProduct.updatedAt())).isAfter(beforeUpdate.minusSeconds(1));
+    }
+
+    @Test
+    @DirtiesContext
+    void updateProduct_shouldReturn404_whenCalledWithInvalidId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/products/invalid-id")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                        {
+                          "name": "Updated Product",
+                          "description": "Updated Description",
+                          "stockKeepingUnit": "UPDATED-SKU",
+                          "quantity": 100,
+                          "price": 7.90,
+                          "location": "A1-B2-C3"
+                        }
+                        """))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+
+
+
 }

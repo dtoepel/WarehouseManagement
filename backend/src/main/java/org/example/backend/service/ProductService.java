@@ -1,12 +1,11 @@
 package org.example.backend.service;
 
+import org.example.backend.exceptions.InvalidRequestException;
 import org.example.backend.exceptions.ProductNotFoundException;
 import org.example.backend.model.Product;
 import org.example.backend.model.ProductDto;
 import org.example.backend.repository.ProductRepo;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 import java.time.Instant;
 import java.util.List;
@@ -33,7 +32,7 @@ public class ProductService {
 
 
     public Product addProduct(ProductDto newProduct) {
-        Instant now = Instant.now();
+        String timeValue = Instant.now().toString();
 
         Product product = new Product(
                 idService.generateId(),
@@ -43,8 +42,8 @@ public class ProductService {
                 newProduct.quantity(),
                 newProduct.price(),
                 newProduct.location(),
-                now.toString(),
-                now.toString()
+                timeValue,
+                timeValue
         );
 
         productRepo.save(product);
@@ -52,9 +51,26 @@ public class ProductService {
         return product;
     }
 
+    public Product updateProduct(String id, ProductDto newProduct) throws InvalidRequestException {
+        Product existingProduct = productRepo.findById(id)
+                .orElseThrow(() -> new InvalidRequestException(
+                        "The Product ID is invalid. It can not be edit."));
+
+        Product updatedProduct = existingProduct
+                .withName(newProduct.name())
+                .withDescription(newProduct.description())
+                .withStockKeepingUnit(newProduct.stockKeepingUnit())
+                .withQuantity(newProduct.quantity())
+                .withPrice(newProduct.price())
+                .withLocation(newProduct.location())
+                .withUpdatedAt(Instant.now().toString());
+
+        return productRepo.save(updatedProduct);
+    }
+
     public boolean deleteProduct(String productId) {
         Optional<Product> response = productRepo.findById(productId);
-        if(response.isPresent()) {
+        if (response.isPresent()) {
             productRepo.deleteById(productId);
             return true;
         }
