@@ -94,7 +94,7 @@ function App() {
                             The product {confirmDeleteProduct.name} ({confirmDeleteProduct.stockKeepingUnit}) will be deleted permanently.
                         </p>
                         {confirmDeleteProduct.quantity != null && confirmDeleteProduct.quantity > 0?
-                            (<p style={{color:"#c00"}}>WARNING: This product has still {confirmDeleteProduct.quantity}" units in stock!</p>):""
+                            (<p style={{color:"#c00"}}>WARNING: This product has {confirmDeleteProduct.quantity} units in stock!</p>):""
                         }
                         <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end"}}>
                         <button style={{margin:"10px"}} className={"btn btn-secondary"}
