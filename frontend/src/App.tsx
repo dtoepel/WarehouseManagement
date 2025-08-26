@@ -25,6 +25,8 @@ function App() {
 
     const [addOpen, setAddOpen] = useState(false);
 
+    const [confirmDeleteProduct, setConfirmDeleteProduct] = useState<Product|null>(null);
+
     const getAllProducts = useCallback(async () => {
         {
             console.log("getAllProducts");
@@ -63,7 +65,7 @@ function App() {
                       onProductEditButtonClicked={(product: Product) => console.log("Edit Button Clicked: " + product.name)}
                       onProductDetailsButtonClicked={openDetails}
                       onProductDeleteButtonClicked={(product: Product) =>
-                          deleteProduct(product)}
+                          setConfirmDeleteProduct(product)}
                 />
                 <div className='app-modal'>
                     {/* ✅ AddProduct modal */}
@@ -84,6 +86,24 @@ function App() {
                     )}
                 </div>
             </div>
+        
+            {confirmDeleteProduct != null && (
+                <Modal open={true} title={"Confirm Delete "+confirmDeleteProduct.name} onClose={() => setConfirmDeleteProduct(null)}>
+                    <div>
+                        <button onClick={() => {
+                            deleteProduct(confirmDeleteProduct);
+                            setConfirmDeleteProduct(null)}}>
+                            Yes
+                        </button>
+                        <button onClick={() => {setConfirmDeleteProduct(null)}}>
+                            No
+                        </button>
+                        <button>
+                            Maybe
+                        </button>
+                    </div>
+                </Modal>
+            )}
         </>
     )
 }
