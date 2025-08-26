@@ -56,19 +56,20 @@ public class ProductService {
                 .orElseThrow(() -> new InvalidRequestException(
                         "The Product ID is invalid. It can not be edit."));
 
-        existingProduct.withName(newProduct.name());
-        existingProduct.withDescription(newProduct.description());
-        existingProduct.withStockKeepingUnit(newProduct.stockKeepingUnit());
-        existingProduct.withQuantity(newProduct.quantity());
-        existingProduct.withPrice(newProduct.price());
-        existingProduct.withLocation(newProduct.location());
+        Product updatedProduct = existingProduct
+                .withName(newProduct.name())
+                .withDescription(newProduct.description())
+                .withStockKeepingUnit(newProduct.stockKeepingUnit())
+                .withQuantity(newProduct.quantity())
+                .withPrice(newProduct.price())
+                .withLocation(newProduct.location());
 
-        return productRepo.save(existingProduct);
+        return productRepo.save(updatedProduct);
     }
 
     public boolean deleteProduct(String productId) {
         Optional<Product> response = productRepo.findById(productId);
-        if(response.isPresent()) {
+        if (response.isPresent()) {
             productRepo.deleteById(productId);
             return true;
         }
