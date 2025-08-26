@@ -1,4 +1,4 @@
-import type {Product} from "../types/types.ts";
+import type { Product } from "../types/types.ts";
 import {type FormEvent, useState} from "react";
 import {editProduct} from "../service/api.ts";
 
@@ -12,21 +12,18 @@ export default function EditProduct({ onProductEdit, product, onCancel }: EditPr
     const [productValue, setProductValue] = useState<Product>(product)
 
     const handleChange = (field: keyof Product, value:string) => {
-        setProductValue((prevState) => {
-            return {
+        setProductValue((prevState) => ({
                 ...prevState,
                 [field]: value
-            }
-        })
-    }
+        }));
+    };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         try {
-            await editProduct(productValue)
-                .then(onProductEdit)
-                .catch(e => console.log("Error while editing product ", e))
+            const serverUpdatedProduct: Product = await editProduct(productValue);
+                onProductEdit(serverUpdatedProduct);
+
         } catch (error) {
             console.log("Error caught while editing product" , error);
         }

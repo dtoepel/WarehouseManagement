@@ -68,12 +68,12 @@ function App() {
 
     const handleProductEdit = (product: Product) => {
         if (product) {
-
-            setProducts([product, ...products])
+            setProducts(prevProducts =>
+            prevProducts.map(p =>
+            p.id === product.id ? product : p))
         }
 
         setEditOpen(false);
-        getAllProducts().then();
     }
 
     return (
