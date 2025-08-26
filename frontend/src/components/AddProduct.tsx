@@ -99,8 +99,8 @@ export default function AddProduct({onProductAdd, onCancel}: AddProductProps) {
                 </div>
 
                 <div className="actions">
+                    <input type="submit" className="btn btn-primary" value="Add" />
                     <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
-                    <input type="submit" className="btn btn-primary" value="Add Product" />
                 </div>
             </form>
         </div>

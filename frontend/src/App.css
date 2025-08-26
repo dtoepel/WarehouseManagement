@@ -207,18 +207,20 @@ tr.shortProductBox > td.odd {
 }
 
 .btn {
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: .5rem;
     font-weight: 600;
-    border: 1px solid transparent;
+    border: 1px solid #999;
     cursor: pointer;
     transition: background 0.2s;
+    background-color: #ddd;
 }
 
 .btn-secondary {
     background: #f3f4f6;
     color: #333;
     border-color: #ddd;
+    font-size: 1rem;
 }
 
 .btn-secondary:hover {
@@ -228,6 +230,8 @@ tr.shortProductBox > td.odd {
 .btn-primary {
     background: #2563eb;
     color: #fff;
+    font-size: 1rem;
+    padding-inline: 1.5rem;
 }
 
 .btn-primary:hover {
@@ -314,6 +318,7 @@ button:focus-visible {
 
 .app-title {
     margin: 0 auto;
+    padding-bottom: 1rem;
 }
 
 .page-header {
@@ -345,7 +350,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem .25rem;
+    padding: 2rem .25rem .50rem .25rem;
     margin: 0;
 }
 
