@@ -18,14 +18,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(a -> a
-                        .requestMatchers("/api/auth/me").authenticated()
-                        .requestMatchers("/api/secured").authenticated()
-                        .anyRequest().permitAll()
-                )
-                .logout(o -> o.logoutSuccessUrl(appUrl))
-                .oauth2Login(o -> o.defaultSuccessUrl(appUrl));
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(a -> a
+                .requestMatchers("/api/auth/me").authenticated()
+                .requestMatchers("/api/secured").authenticated()
+                .anyRequest().permitAll()
+            )
+            .logout(o -> o.logoutSuccessUrl(appUrl))
+            .oauth2Login(o -> o.defaultSuccessUrl(appUrl));
         return http.build();
     }
 
