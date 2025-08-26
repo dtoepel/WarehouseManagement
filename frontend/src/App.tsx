@@ -89,18 +89,26 @@ function App() {
         
             {confirmDeleteProduct != null && (
                 <Modal open={true} title={"Confirm Delete "+confirmDeleteProduct.name} onClose={() => setConfirmDeleteProduct(null)}>
-                    <div>
-                        <button onClick={() => {
+                    <div style={{display:"flex", flexDirection:"column"}}>
+                        <p>
+                            The product {confirmDeleteProduct.name} ({confirmDeleteProduct.stockKeepingUnit}) will be deleted permanently.
+                        </p>
+                        {confirmDeleteProduct.quantity != null && confirmDeleteProduct.quantity > 0?
+                            (<p style={{color:"#c00"}}>WARNING: This product has still {confirmDeleteProduct.quantity}" units in stock!</p>):""
+                        }
+                        <div style={{display:"flex", flexDirection:"row", justifyContent:"flex-end"}}>
+                        <button style={{margin:"10px"}} className={"btn btn-secondary"}
+                                onClick={() => {
                             deleteProduct(confirmDeleteProduct);
                             setConfirmDeleteProduct(null)}}>
                             Yes
                         </button>
-                        <button onClick={() => {setConfirmDeleteProduct(null)}}>
+                        <button style={{margin:"10px"}}  className={"btn btn-primary"}
+                                onClick={() => {
+                            setConfirmDeleteProduct(null)}}>
                             No
                         </button>
-                        <button>
-                            Maybe
-                        </button>
+                        </div>
                     </div>
                 </Modal>
             )}
