@@ -214,6 +214,7 @@ tr.shortProductBox > td.odd {
     cursor: pointer;
     transition: background 0.2s;
     background-color: #ddd;
+    color: #333;
 }
 
 .btn-secondary {

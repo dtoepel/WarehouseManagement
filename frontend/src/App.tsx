@@ -33,7 +33,6 @@ function App() {
     };
     const closeEdit = () => {
         setEditOpen(false);
-        // setSelectEditProduct(null)
     };
 
     const getAllProducts = useCallback(async () => {
@@ -41,7 +40,6 @@ function App() {
             console.log("getAllProducts");
             await axios.get("api/products").then(
                 (response) => {
-                    console.log(response.data);
                     setProducts(response.data)
                 }
             )
