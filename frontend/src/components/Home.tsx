@@ -54,7 +54,7 @@ export default function Home(props: Readonly<ProductTableProps>) {
                                     </td>
                                     <td data-label="Price: "
                                         className="table-data">
-                                        {product.price} €
+                                        €{product.price}
                                     </td>
                                     <td data-label="Quantity: "
                                         className="table-data">
